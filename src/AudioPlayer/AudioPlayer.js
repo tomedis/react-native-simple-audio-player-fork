@@ -10,9 +10,9 @@ UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
 const volumeControlTime = 3000;
- 
+
 export const AudioPlayer = (props) => {
-  const { url, style, repeatOnComponent, repeatOffComponent } = props;
+  const { url, style, repeatOnComponent, repeatOffComponent, colorControl } = props;
   const [paused, setPaused] = useState(true);
 
   const videoRef = useRef(null);
@@ -109,13 +109,13 @@ export const AudioPlayer = (props) => {
                 style={styles.iconContainer}
                 onPress={toggleRepeat}
               >
-                <Image source={Images.repeatIcon} style={styles.playIcon}/>
+                <Image source={Images.repeatIcon} style={[styles.playIcon, colorControl && { tintColor: colorControl }]}/>
                 {!repeat && <View style={styles.crossLine}/>}
               </TouchableOpacity>
               <TouchableOpacity style={[styles.iconContainer, styles.playBtn]} onPress={togglePlay}>
                 <Image
                   source={paused ? Images.playIcon : Images.pauseIcon}
-                  style={styles.playIcon}
+                  style={[styles.playIcon, colorControl && { tintColor: colorControl }]}
                 />
               </TouchableOpacity>
               <View
@@ -131,7 +131,7 @@ export const AudioPlayer = (props) => {
                 >
                   <Image
                     source={volume === 0 ? Images.muteIcon : Images.soundIcon}
-                    style={styles.playIcon}
+                    style={[styles.playIcon, colorControl && { tintColor: colorControl }]}
                   />
                 </TouchableOpacity>
                 {volumeControl && (
