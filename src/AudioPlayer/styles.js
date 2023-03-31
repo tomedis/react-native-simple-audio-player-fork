@@ -12,6 +12,10 @@ export const styles = StyleSheet.create({
   playBtn: {
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: '#006837',
+    padding: 25,
+    borderRadius: 1000,
+    alignSelf: 'center'
   },
   sliderContainer: {
     paddingHorizontal: 16,

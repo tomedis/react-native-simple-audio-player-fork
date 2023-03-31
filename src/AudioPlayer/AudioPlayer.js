@@ -7,12 +7,12 @@ import { toHHMMSS } from "./utils";
 import { Images } from "./assets/index";
 
 UIManager.setLayoutAnimationEnabledExperimental &&
-  UIManager.setLayoutAnimationEnabledExperimental(true);
+UIManager.setLayoutAnimationEnabledExperimental(true);
 
 const volumeControlTime = 3000;
 
 export const AudioPlayer = (props) => {
-  const { url, style, repeatOnComponent, repeatOffComponent, colorControl } = props;
+  const { url, style, repeatOnComponent, repeatOffComponent, colorControl, onPressBackground, hidenControl = false } = props;
   const [paused, setPaused] = useState(true);
 
   const videoRef = useRef(null);
@@ -79,95 +79,68 @@ export const AudioPlayer = (props) => {
   };
 
   return (
-    <View style={[style && style, {}]}>
+    <View style={[style && style, { flex: 1,}]}>
       <Video
         source={{ uri: url }}
         ref={videoRef}
         playInBackground={false}
         audioOnly={true}
-        playWhenInactive={false}
+        playWhenInactive={true}
         paused={paused}
         onEnd={resetAudio}
         onLoad={fixDuration}
         onLoadStart={() => setLoading(true)}
         onProgress={setTime}
-        volume={volume}
-        repeat={repeat}
+        volume={false}
+        repeat={false}
         style={{ height: 0, width: 0 }}
       />
-      <View style={{ flex: 1, alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <TouchableOpacity activeOpacity={1} style={{
+          position: 'absolute',
+          backgroundColor: 'rgba(0,0,0,0.2)',
+          flex: 1,
+          width: '100%',
+          height: '100%',
+        }} onPress={() => onPressBackground?.()}>
+
+        </TouchableOpacity>
         {loading && (
           <View style={{ margin: 18 }}>
             <ActivityIndicator size="large" color="#FFF"/>
           </View>
-        ) || (
-          <View style={styles.actionsContainer}>
-            <TouchableOpacity
-              hitSlop={{ top: 10, bottom: 10, right: 10, left: 10 }}
-              style={styles.iconContainer}
-              onPress={toggleRepeat}
-            >
-              <Image source={Images.repeatIcon} style={[styles.playIcon, colorControl && { tintColor: colorControl }]}/>
-              {!repeat && <View style={[styles.crossLine, colorControl && { borderBottomColor: colorControl }]}/>}
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.iconContainer, styles.playBtn]} onPress={togglePlay}>
-              <Image
-                source={paused ? Images.playIcon : Images.pauseIcon}
-                style={[styles.playIcon, colorControl && { tintColor: colorControl }]}
-              />
-            </TouchableOpacity>
-            <View
-              style={[
-                styles.volumeControlContainer,
-                volumeControl ? { paddingHorizontal: 12 } : { backgroundColor: "transparent" }
-              ]}
-            >
-              <TouchableOpacity
-                hitSlop={{ top: 10, bottom: 10, right: 10, left: 10 }}
-                style={styles.iconContainer}
-                onPress={toggleVolumeControl}
-              >
-                <Image
-                  source={volume === 0 ? Images.muteIcon : Images.soundIcon}
-                  style={[styles.playIcon, colorControl && { tintColor: colorControl }]}
-                />
-              </TouchableOpacity>
-              {volumeControl && (
-                <Slider
-                  style={styles.volumeSlider}
-                  minimumValue={0}
-                  maximumValue={1}
-                  minimumTrackTintColor={colorControl ? colorControl : '#fff'}
-                  maximumTrackTintColor={'grey'}
-                  thumbTintColor={colorControl ? colorControl : '#fff'}
-                  onSlidingComplete={onVolumeChange}
-                  value={volume}
-                />
-              )}
-            </View>
-          </View>
         )}
-      </View>
-      <View style={styles.rowContainer}>
-        <View style={styles.sliderContainer}>
-          <Slider
-            style={styles.slider}
-            minimumValue={0}
-            maximumValue={Math.max(totalLength, 1, currentPosition + 1)}
-            minimumTrackTintColor={'#006837'}
-            maximumTrackTintColor={'grey'}
-            onSlidingComplete={onSeek}
-            value={currentPosition}
+        {!hidenControl && !loading && (<TouchableOpacity activeOpacity={1} style={[styles.iconContainer, styles.playBtn]} onPress={togglePlay}>
+          <Image
+            source={paused ? Images.playIcon : Images.pauseIcon}
+            style={[styles.playIcon, colorControl && { tintColor: 'white' }]}
           />
-          <View style={styles.durationContainer}>
-            <Text style={[styles.timeText, colorControl && { color: colorControl }]}>
-              {toHHMMSS(currentPosition)}
-            </Text>
-            <Text style={[styles.timeText, colorControl && { color: colorControl }]}>
-            {toHHMMSS(totalLength)}
-            </Text>
-          </View>
-        </View>
+        </TouchableOpacity>)}
+      </View>
+      <View style={[styles.rowContainer, !hidenControl && { backgroundColor: 'rgba(0,0,0,0.2)' }]}>
+        {
+          !hidenControl && (
+            <View style={styles.sliderContainer}>
+              <Slider
+                style={styles.slider}
+                minimumValue={0}
+                maximumValue={Math.max(totalLength, 1, currentPosition + 1)}
+                minimumTrackTintColor={'#006837'}
+                maximumTrackTintColor={'grey'}
+                onSlidingComplete={onSeek}
+                value={currentPosition}
+              />
+              <View style={styles.durationContainer}>
+                <Text style={[styles.timeText, colorControl && { color: colorControl }]}>
+                  {toHHMMSS(currentPosition)}
+                </Text>
+                <Text style={[styles.timeText, colorControl && { color: colorControl }]}>
+                  {toHHMMSS(totalLength)}
+                </Text>
+              </View>
+            </View>
+          )
+        }
       </View>
     </View>
   );
