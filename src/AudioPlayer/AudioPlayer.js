@@ -12,7 +12,7 @@ UIManager.setLayoutAnimationEnabledExperimental(true);
 const volumeControlTime = 3000;
 
 export const AudioPlayer = (props) => {
-  const { url, style, repeatOnComponent, repeatOffComponent, colorControl, onPressBackground, hidenControl = false } = props;
+  const { url, style, repeatOnComponent, repeatOffComponent, colorControl, onPressBackground, hidenControl = false, onPlay } = props;
   const [paused, setPaused] = useState(true);
 
   const videoRef = useRef(null);
@@ -98,7 +98,7 @@ export const AudioPlayer = (props) => {
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <TouchableOpacity activeOpacity={1} style={{
           position: 'absolute',
-          backgroundColor: 'rgba(0,0,0,0.2)',
+          backgroundColor: !hidenControl ? 'rgba(0,0,0,0.2)' : 'transparent',
           flex: 1,
           width: '100%',
           height: '100%',
@@ -110,7 +110,10 @@ export const AudioPlayer = (props) => {
             <ActivityIndicator size="large" color="#FFF"/>
           </View>
         )}
-        {!hidenControl && !loading && (<TouchableOpacity activeOpacity={1} style={[styles.iconContainer, styles.playBtn]} onPress={togglePlay}>
+        {!hidenControl && !loading && (<TouchableOpacity activeOpacity={1} style={[styles.iconContainer, styles.playBtn]} onPress={() => {
+          togglePlay();
+          onPlay?.();
+        }}>
           <Image
             source={paused ? Images.playIcon : Images.pauseIcon}
             style={[styles.playIcon, colorControl && { tintColor: 'white' }]}
