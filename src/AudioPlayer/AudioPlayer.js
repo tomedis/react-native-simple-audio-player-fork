@@ -110,7 +110,7 @@ export const AudioPlayer = (props) => {
                 onPress={toggleRepeat}
               >
                 <Image source={Images.repeatIcon} style={[styles.playIcon, colorControl && { tintColor: colorControl }]}/>
-                {!repeat && <View style={styles.crossLine}/>}
+                {!repeat && <View style={[styles.crossLine, colorControl && { borderBottomColor: colorControl }]}/>}
               </TouchableOpacity>
               <TouchableOpacity style={[styles.iconContainer, styles.playBtn]} onPress={togglePlay}>
                 <Image
@@ -139,9 +139,9 @@ export const AudioPlayer = (props) => {
                     style={styles.volumeSlider}
                     minimumValue={0}
                     maximumValue={1}
-                    minimumTrackTintColor={'#fff'}
+                    minimumTrackTintColor={colorControl ? colorControl : '#fff'}
                     maximumTrackTintColor={'grey'}
-                    thumbTintColor={'#fff'}
+                    thumbTintColor={colorControl ? colorControl : '#fff'}
                     onSlidingComplete={onVolumeChange}
                     value={volume}
                   />
@@ -161,11 +161,11 @@ export const AudioPlayer = (props) => {
               value={currentPosition}
             />
             <View style={styles.durationContainer}>
-              <Text style={styles.timeText}>
+              <Text style={[styles.timeText, colorControl && { color: colorControl }]}>
                 {toHHMMSS(currentPosition)}
               </Text>
-              <Text style={styles.timeText}>
-                {toHHMMSS(totalLength)}
+              <Text style={[styles.timeText, colorControl && { color: colorControl }]}>
+              {toHHMMSS(totalLength)}
               </Text>
             </View>
           </View>
