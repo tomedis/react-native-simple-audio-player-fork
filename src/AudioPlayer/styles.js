@@ -61,6 +61,7 @@ export const styles = StyleSheet.create({
   },
   volumeSlider: {
     width: '50%',
+    backgroundColor: 'rgba(255,255,255,0.71)'
   },
   timeText: {
     color: '#fff',

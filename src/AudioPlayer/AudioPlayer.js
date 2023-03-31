@@ -95,79 +95,77 @@ export const AudioPlayer = (props) => {
         repeat={repeat}
         style={{ height: 0, width: 0 }}
       />
-
-      <View>
-        <View style={styles.rowContainer}>
-          {loading && (
-            <View style={{ margin: 18 }}>
-              <ActivityIndicator size="large" color="#FFF"/>
-            </View>
-          ) || (
-            <View style={styles.actionsContainer}>
+      <View style={{ flex: 1, alignItems: 'center'}}>
+        {loading && (
+          <View style={{ margin: 18 }}>
+            <ActivityIndicator size="large" color="#FFF"/>
+          </View>
+        ) || (
+          <View style={styles.actionsContainer}>
+            <TouchableOpacity
+              hitSlop={{ top: 10, bottom: 10, right: 10, left: 10 }}
+              style={styles.iconContainer}
+              onPress={toggleRepeat}
+            >
+              <Image source={Images.repeatIcon} style={[styles.playIcon, colorControl && { tintColor: colorControl }]}/>
+              {!repeat && <View style={[styles.crossLine, colorControl && { borderBottomColor: colorControl }]}/>}
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.iconContainer, styles.playBtn]} onPress={togglePlay}>
+              <Image
+                source={paused ? Images.playIcon : Images.pauseIcon}
+                style={[styles.playIcon, colorControl && { tintColor: colorControl }]}
+              />
+            </TouchableOpacity>
+            <View
+              style={[
+                styles.volumeControlContainer,
+                volumeControl ? { paddingHorizontal: 12 } : { backgroundColor: "transparent" }
+              ]}
+            >
               <TouchableOpacity
                 hitSlop={{ top: 10, bottom: 10, right: 10, left: 10 }}
                 style={styles.iconContainer}
-                onPress={toggleRepeat}
+                onPress={toggleVolumeControl}
               >
-                <Image source={Images.repeatIcon} style={[styles.playIcon, colorControl && { tintColor: colorControl }]}/>
-                {!repeat && <View style={[styles.crossLine, colorControl && { borderBottomColor: colorControl }]}/>}
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.iconContainer, styles.playBtn]} onPress={togglePlay}>
                 <Image
-                  source={paused ? Images.playIcon : Images.pauseIcon}
+                  source={volume === 0 ? Images.muteIcon : Images.soundIcon}
                   style={[styles.playIcon, colorControl && { tintColor: colorControl }]}
                 />
               </TouchableOpacity>
-              <View
-                style={[
-                  styles.volumeControlContainer,
-                  volumeControl ? { paddingHorizontal: 12 } : { backgroundColor: "transparent" }
-                ]}
-              >
-                <TouchableOpacity
-                  hitSlop={{ top: 10, bottom: 10, right: 10, left: 10 }}
-                  style={styles.iconContainer}
-                  onPress={toggleVolumeControl}
-                >
-                  <Image
-                    source={volume === 0 ? Images.muteIcon : Images.soundIcon}
-                    style={[styles.playIcon, colorControl && { tintColor: colorControl }]}
-                  />
-                </TouchableOpacity>
-                {volumeControl && (
-                  <Slider
-                    style={styles.volumeSlider}
-                    minimumValue={0}
-                    maximumValue={1}
-                    minimumTrackTintColor={colorControl ? colorControl : '#fff'}
-                    maximumTrackTintColor={'grey'}
-                    thumbTintColor={colorControl ? colorControl : '#fff'}
-                    onSlidingComplete={onVolumeChange}
-                    value={volume}
-                  />
-                )}
-              </View>
+              {volumeControl && (
+                <Slider
+                  style={styles.volumeSlider}
+                  minimumValue={0}
+                  maximumValue={1}
+                  minimumTrackTintColor={colorControl ? colorControl : '#fff'}
+                  maximumTrackTintColor={'grey'}
+                  thumbTintColor={colorControl ? colorControl : '#fff'}
+                  onSlidingComplete={onVolumeChange}
+                  value={volume}
+                />
+              )}
             </View>
-          )}
-
-          <View style={styles.sliderContainer}>
-            <Slider
-              style={styles.slider}
-              minimumValue={0}
-              maximumValue={Math.max(totalLength, 1, currentPosition + 1)}
-              minimumTrackTintColor={'#fff'}
-              maximumTrackTintColor={'grey'}
-              onSlidingComplete={onSeek}
-              value={currentPosition}
-            />
-            <View style={styles.durationContainer}>
-              <Text style={[styles.timeText, colorControl && { color: colorControl }]}>
-                {toHHMMSS(currentPosition)}
-              </Text>
-              <Text style={[styles.timeText, colorControl && { color: colorControl }]}>
-              {toHHMMSS(totalLength)}
-              </Text>
-            </View>
+          </View>
+        )}
+      </View>
+      <View style={styles.rowContainer}>
+        <View style={styles.sliderContainer}>
+          <Slider
+            style={styles.slider}
+            minimumValue={0}
+            maximumValue={Math.max(totalLength, 1, currentPosition + 1)}
+            minimumTrackTintColor={'#006837'}
+            maximumTrackTintColor={'grey'}
+            onSlidingComplete={onSeek}
+            value={currentPosition}
+          />
+          <View style={styles.durationContainer}>
+            <Text style={[styles.timeText, colorControl && { color: colorControl }]}>
+              {toHHMMSS(currentPosition)}
+            </Text>
+            <Text style={[styles.timeText, colorControl && { color: colorControl }]}>
+            {toHHMMSS(totalLength)}
+            </Text>
           </View>
         </View>
       </View>
