@@ -91,7 +91,7 @@ export const AudioPlayer = (props) => {
         onLoad={fixDuration}
         onLoadStart={() => setLoading(true)}
         onProgress={setTime}
-        volume={false}
+        volume={100}
         repeat={false}
         style={{ height: 0, width: 0 }}
       />
