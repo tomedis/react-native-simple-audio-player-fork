@@ -12,7 +12,7 @@ UIManager.setLayoutAnimationEnabledExperimental(true);
 const volumeControlTime = 3000;
 
 export const AudioPlayer = (props) => {
-  const { url, style, repeatOnComponent, repeatOffComponent, colorControl, onPressBackground, hidenControl = false, onPlay } = props;
+  const { url, style, repeatOnComponent, repeatOffComponent, colorControl, onPressBackground, hidenControl = false, onPlay, onEnd } = props;
   const [paused, setPaused] = useState(false);
 
   const videoRef = useRef(null);
@@ -23,7 +23,7 @@ export const AudioPlayer = (props) => {
   const [loading, setLoading] = useState(false);
   const [volume, setVolume] = useState(0.7);
   const [volumeControl, setVolumeControl] = useState(false);
-  const [repeat, setRepeat] = useState(false);
+  const [repeat, setRepeat] = useState(true);
 
   const onSeek = (time) => {
     time = Math.round(time);
@@ -76,6 +76,7 @@ export const AudioPlayer = (props) => {
       setPaused(true);
     }
     setCurrentPosition(0);
+    onEnd?.(repeat);
   };
 
   return (
@@ -92,10 +93,10 @@ export const AudioPlayer = (props) => {
         onLoadStart={() => setLoading(true)}
         onProgress={setTime}
         volume={0.7}
-        repeat={false}
+        repeat={repeat}
         style={{ height: 0, width: 0 }}
       />
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
         <TouchableOpacity activeOpacity={1} style={{
           position: 'absolute',
           backgroundColor: !hidenControl ? 'rgba(0,0,0,0.2)' : 'transparent',
@@ -117,6 +118,13 @@ export const AudioPlayer = (props) => {
           <Image
             source={paused ? Images.playIcon : Images.pauseIcon}
             style={[styles.playIcon, colorControl && { tintColor: 'white' }]}
+          />
+        </TouchableOpacity>)}
+        <View style={{ width: 20 }} />
+        {!hidenControl && !loading && (<TouchableOpacity activeOpacity={1} style={[styles.iconContainer, styles.playBtn, { padding: 20}]} onPress={toggleRepeat}>
+          <Image
+            source={repeat ? Images.repeatIcon : Images.noneRepeatIcon}
+            style={[styles.playIcon, { tintColor: 'white', width: 40, height: 40 }]}
           />
         </TouchableOpacity>)}
       </View>
