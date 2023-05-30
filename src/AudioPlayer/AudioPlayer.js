@@ -13,7 +13,7 @@ const volumeControlTime = 3000;
 
 export const AudioPlayer = (props) => {
   const { url, style, repeatOnComponent, repeatOffComponent, colorControl, onPressBackground, hidenControl = false, onPlay } = props;
-  const [paused, setPaused] = useState(true);
+  const [paused, setPaused] = useState(false);
 
   const videoRef = useRef(null);
   const controlTimer = useRef(0);
