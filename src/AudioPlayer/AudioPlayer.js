@@ -23,7 +23,7 @@ export const AudioPlayer = (props) => {
   const [loading, setLoading] = useState(false);
   const [volume, setVolume] = useState(0.7);
   const [volumeControl, setVolumeControl] = useState(false);
-  const [repeat, setRepeat] = useState(true);
+  const [repeat, setRepeat] = useState(false);
 
   const onSeek = (time) => {
     time = Math.round(time);
